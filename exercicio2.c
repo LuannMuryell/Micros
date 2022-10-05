@@ -1,7 +1,7 @@
 #include "stm32f4xx.h"
 
 /***************************************************
-Exercício 2
+ExercÃ­cio 2
 ****************************************************/
 void tempo1 (){ //2Hz (0,25s)
 TIM10->PSC=399;
@@ -21,8 +21,8 @@ TIM10->SR &= ~(0x01);
 int main(void)
 {
 	RCC->AHB1ENR=0x87; //Habilitando o CLK dos GPIOs
-	//GPIOA->MODER|=0x28000000; // Configurando PA14 e PA13 como função alternativa;
-	GPIOB->MODER=0x01; // PB0 como saída (será conectado ao led)
+	//GPIOA->MODER|=0x28000000; // Configurando PA14 e PA13 como funÃ§Ã£o alternativa;
+	GPIOB->MODER=0x01; // PB0 como saÃ­da (serÃ¡ conectado ao led)
 	GPIOC->MODER=0x0; // Iremos utilizar PC1 como entrada
 	GPIOC->PUPDR=0x4; // Pull-up em PC1;
 
