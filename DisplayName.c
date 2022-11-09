@@ -1,20 +1,20 @@
 #include "stm32f4xx.h"
 
-int disp1=0, disp2=0, disp3=0, disp4=0;
+int disp1=0, disp2=1, disp3=2, disp4=3;
 int conta_disp=0;
 
 int nomeLuann[]={0x0, 0X38, 0X1C, 0X77, 0X54, 0X54}; // L-u-a-n-n
 // 0x0 espaço em branco
 
 void TIM1_UP_TIM10_IRQHandler(){
-  if(--disp1<0)
-    disp1=6;
-  if(--disp2<0)
-    disp2=6;
-  if(--disp3<0)
-    disp3=6;
-  if(--disp4<0)
-    disp4=6;       
+  if(++disp1>5)
+    disp1=0;
+  if(++disp2>5)
+    disp2=0;
+  if(++disp3>5)
+    disp3=0;
+  if(++disp4>5)
+    disp4=0;
   TIM10->SR &= ~(0x01);  //limpando flag do timer10
 }
 
@@ -26,19 +26,19 @@ void TIM1_TRG_COM_TIM11_IRQHandler(){
   switch(conta_disp){
   case 0:
       GPIOC->ODR |= nomeLuann[disp1];
-      GPIOC->ODR &= ~0x100;
+      GPIOC->ODR &= ~0x800;
       break;
   case 1:
       GPIOC->ODR |= nomeLuann[disp2];
-      GPIOC->ODR &= ~0x200;
+      GPIOC->ODR &= ~0x400;
       break;
   case 2:
       GPIOC->ODR |= nomeLuann[disp3];
-      GPIOC->ODR &= ~0x400;
+      GPIOC->ODR &= ~0x200;
       break;
   case 3:
       GPIOC->ODR |= nomeLuann[disp4];
-      GPIOC->ODR &= ~0x800;
+      GPIOC->ODR &= ~0x100;
       break;
 
   }
@@ -63,8 +63,8 @@ void config_int_tim10(void){
   //configurando o timer10 para 0,5s
     RCC->APB2ENR|=0x20000;  //habilita clock timer10
     TIM10->CR1|=0x01;    //habilita contagem timer10
-    TIM10->PSC=1199;
-    TIM10->ARR=1999;
+    TIM10->PSC=1999;
+    TIM10->ARR=3999;
 
     TIM10->DIER|=0x01; //habilita interrupção timer10
     // Habilita interrupção no controlador
@@ -75,7 +75,7 @@ void config_int_tim10(void){
 int main(void)
 {
   RCC->AHB1ENR=0x87;
-  GPIOC->MODER|=0x00555555; 
+  GPIOC->MODER|=0x00555555;
   GPIOA->MODER|=0x28555500;  //PA5 como saída
   //configurando o timer10 para gerar 5segundos
   config_int_tim10();
